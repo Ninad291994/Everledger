@@ -47,7 +47,7 @@ print('\n3 .Number of null values in each column:\n',\
 
 # We can see from above column datatype description that Date of Birth and
 # Date of Joining are object datatypes. Let's normalize these columns to 
-# ISO date format YYYY-MM-DD.
+# standard date format YYYY-MM-DD.
 
 # Normalizing Date of Birth column
 df_employee['Date of Birth'] = pd.to_datetime(df_employee['Date of Birth'],\
