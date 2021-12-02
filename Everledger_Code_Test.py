@@ -43,22 +43,54 @@ print('\n2. Datatype of each column in the dataframe:\n',\
 print('\n3 .Number of null values in each column:\n',\
         df_employee.isna().sum())
 
-# 2. Normalization
-# We can see from above column datatype description that Date of Birth and
-# Date of Joining are object datatypes. Let's normalize these columns to 
-# standard date format YYYY-MM-DD.
+# 2. Normalization of Date of Joining
+# We can see from above column datatype description that Date of 
+# Joining are object datatypes. Let's normalize these columns to 
+# standard date format yyyy-mm-dd.
 
-# Normalizing Date of Birth column
-df_employee['Date of Birth'] = pd.to_datetime(df_employee['Date of Birth'],\
-                                errors='coerce')
-
-# Normalizing Date of Joining column
 df_employee['Date of Joining'] = pd.to_datetime(df_employee['Date of Joining'],\
-                                errors='coerce')
+                                              errors='coerce')
+
+# Let's check if quarter of joining is correct according to date
+# of joining
+print('\n\nIncorrect Quarters as per date of joining:\n')
+for i in range(len(df_employee)):
+    m = df_employee['Date of Joining'].iloc[i].month
+    q = ((m-1)//3)+1
+    quarter = 'Q'+str(q)
+    if quarter != df_employee['Quarter of Joining'].iloc[i]:
+        print(df_employee.iloc[[i]])
+        print('\n\n')
+        
+# We can see from below results that there are some rows with quarter
+# of joining not consistent with date of joining. After investigating
+# it seems like these rows had date in yyyy-mm-dd HH:MM:SS format in
+# original dataframe.
+
+# Assumption: I am assuming for these rows that quarters are incorrect
+# and changed the quarters to correct ones. 
+for i in range(len(df_employee)):
+    m = df_employee['Date of Joining'].iloc[i].month
+    q = ((m-1)//3)+1
+    quarter = 'Q'+str(q)
+    if quarter != df_employee['Quarter of Joining'].iloc[i]:
+        df_employee.iloc[i, df_employee.columns.\
+                         get_loc("Quarter of Joining")] = quarter
+        
+
+
+# However, if we assume that quarters were correct for these rows but 
+# in date of joining places of month and day were mistakenly replaced,
+# we will have to modify dates. There is no way to assume that
+
+
+# 3. Normalization of Date of Birth column
+df_employee['Date of Birth'] = pd.to_datetime(df_employee['Date of Birth'],\
+                                              errors='coerce')
 
 print('\n\nAnswer to Task 2:\n')
 print('Date of Birth and Date of Joining datatype changed:\n', df_employee.dtypes)
-print('df_employee with normalized date columns \n\n', df_employee)
+print('\n\ndf_employee with normalized date column \n\n', df_employee)
 
 
 
