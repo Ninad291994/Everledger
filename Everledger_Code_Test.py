@@ -52,8 +52,9 @@ print('\n3 .Number of null values in each column:\n',\
 # However, there is no way to validate that all the dates in both
 # columns are in this format since data could have been collected
 # from different sources. to_datetime() function in pandas by 
-# default considers string in mm/dd/yyyy format. Hence we can use
-# it directly.
+# default considers string in mm/dd/yyyy format and if the format
+# is datetime, it will cosider that format. Hence we can use the
+# function directly.
 
 # 2. Normalization of Date of Joining
 # We can see from above column datatype description that Date of 
