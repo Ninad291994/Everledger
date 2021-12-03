@@ -43,6 +43,18 @@ print('\n2. Datatype of each column in the dataframe:\n',\
 print('\n3 .Number of null values in each column:\n',\
         df_employee.isna().sum())
 
+# After analyzing the data in above two steps it was found that
+# most dates in Date of Birth and Date of Joining columns are
+# strings and some others are in datetime format. 
+
+# Assumption: I am assuming that string dates in both columns are
+# in format mm/dd/yyyy by looking at joining date and quarter. 
+# However, there is no way to validate that all the dates in both
+# columns are in this format since data could have been collected
+# from different sources. to_datetime() function in pandas by 
+# default considers string in mm/dd/yyyy format. Hence we can use
+# it directly.
+
 # 2. Normalization of Date of Joining
 # We can see from above column datatype description that Date of 
 # Joining are object datatypes. Let's normalize these columns to 
@@ -51,8 +63,9 @@ print('\n3 .Number of null values in each column:\n',\
 df_employee['Date of Joining'] = pd.to_datetime(df_employee['Date of Joining'],\
                                               errors='coerce')
 
-# Let's check if quarter of joining is correct according to date
-# of joining
+# 3. Check 2 -  Let's check if quarter of joining is correct according 
+# to date of joining. This will also make us aware if there are any 
+# values in quarter apart from Q1, Q2, Q3, Q4.
 print('\n\nIncorrect Quarters as per date of joining:\n')
 for i in range(len(df_employee)):
     m = df_employee['Date of Joining'].iloc[i].month
@@ -84,7 +97,7 @@ for i in range(len(df_employee)):
 # we will have to modify dates. There is no way to assume that
 
 
-# 3. Normalization of Date of Birth column
+# 4. Normalization of Date of Birth column
 df_employee['Date of Birth'] = pd.to_datetime(df_employee['Date of Birth'],\
                                               errors='coerce')
 
@@ -100,15 +113,6 @@ by the field Date of Birth and print as dictionary {Q1 : [emp1, emp2, ...]}"""
 
 
 # 1. Check 1
-# Since we need to groupby 'Quarter of Joining', let's first check unique values
-# of this column. This will also make us aware if there are any incorrect values.
-print('\nUnique values in Quarter of Joining column:\n',\
-        df_employee['Quarter of Joining'].unique())
-
-# Thus, values in Quarter of Joining column are consistent and correct.
-
-
-# 2. Check 2
 # Since we need to display employee name, let's check if there are
 # more than one employees with same First Name.
 print('\nResults show if First Name is same for multiple employees: \n',\
@@ -125,7 +129,7 @@ df_employee['Full Name'] = df_employee[['First Name', 'Last Name']]\
 print('\n Dataframe with new column Full Name:\n',df_employee)
 
 
-# 3. Sorting and Grouping
+# 2. Sorting and Grouping
 # Ref: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html
 # Groupby preserves the order of rows of original dataframe within each group. 
 # Thus we can sort first based on Date of Birth and then groupby Quarter of Joining 
@@ -139,7 +143,7 @@ grouped_sorted_emp_dict = df_employee.sort_values(['Date of Birth'], ascending=F
 print('\nResult:\n', grouped_sorted_emp_dict)
 
 
-# 4. Verification of results by alternate method
+# 3. Verification of results by alternate method
 # Let's verify if above results are correct by comparing list of Q1 with
 # list obtained by alternate method. For verification, df_employee is 
 # filtered on rows with Quarter of Joining as Q1 and sliced to keep only 
@@ -153,8 +157,8 @@ verification_df = df_employee[df_employee['Quarter of Joining'] == 'Q1']\
 
 name_list_for_verification = list(verification_df['Full Name'])
 
-# Let's check if list of Q1 in grouped_sorted_emp_dict is same as 
-# name_list_for_verification
+# 4. Check 2 - Let's check if list of Q1 in grouped_sorted_emp_dict is 
+# same as name_list_for_verification
 if name_list_for_verification == grouped_sorted_emp_dict['Q1']:
     print('\nLists are same. Hence, results are correct and verified.')
 else:
